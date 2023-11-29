@@ -115,7 +115,7 @@ namespace :puma do
       service_ok = if fetch(:puma_systemctl_user) == :system
                      execute("#{fetch(:puma_systemctl_bin)} status #{fetch(:puma_service_unit_name)} > /dev/null", raise_on_non_zero_exit: false)
                    else
-                     execute("#{fetch(:puma_systemctl_bin)} --user status #{fetch(:puma_service_unit_name)} > /dev/null", raise_on_non_zero_exit: false)
+                     execute("#{fetch(:puma_systemctl_bin)} --user fetch(:puma_service_unit_machine) status #{fetch(:puma_service_unit_name)} > /dev/null", raise_on_non_zero_exit: false)
                    end
       cmd = 'reload'
       unless service_ok
@@ -124,7 +124,7 @@ namespace :puma do
       if fetch(:puma_systemctl_user) == :system
         sudo "#{fetch(:puma_systemctl_bin)} #{cmd} #{fetch(:puma_service_unit_name)}"
       else
-        execute "#{fetch(:puma_systemctl_bin)}", "--user", cmd, fetch(:puma_service_unit_name)
+        execute "#{fetch(:puma_systemctl_bin)}", "--user fetch(:puma_service_unit_machine)", cmd, fetch(:puma_service_unit_name)
       end
     end
   end
