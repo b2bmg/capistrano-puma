@@ -22,6 +22,7 @@ module Capistrano
       set_if_empty :puma_enable_lingering, -> { fetch(:puma_systemctl_user) != :system }
       set_if_empty :puma_lingering_user, -> { fetch(:lingering_user, fetch(:user)) }
 
+      set_if_empty :puma_service_additional, []
       set_if_empty :puma_service_templates_path, fetch(:service_templates_path, 'config/deploy/templates')
     end
 
@@ -43,6 +44,7 @@ module Capistrano
 
       unless fetch(:puma_systemctl_user) == :system
         command << "--user"
+        command += fetch(:puma_service_additional)
       end
 
       command + args
